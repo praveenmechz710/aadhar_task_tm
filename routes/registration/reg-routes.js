@@ -22,6 +22,18 @@ catch(error){
 }
 });
 
+// To get the statewise aadhar holder details
+router.get('/State_wise_aadhar_holder',async(req,res)=>{
+    try{
+        const [rows] = await con.execute('select sm.state_name,count(au.tid) as aadhar_holders from aadhar_user as au join state_master as sm on au.state_id = sm.tid group by sm.state_name ');
+        res.json(rows);
+    }
+    catch(error){
+        res.status(500).json({error:error.message});
+    }
+});
+
+// To upload the file to the directory 
 router.post('/upload/:email_id',upload.single('profile'),async(req,res)=>{
     const emailId = req.params.email_id;
     if(!req.file){
